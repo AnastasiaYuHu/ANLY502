@@ -10,7 +10,7 @@ rmf sorted_words2
 --
 -- Run the script
 
-shakespeare = LOAD '/home/cloudera/PS04/test.txt' as (line:chararray);
+shakespeare = LOAD 's3://gu-anly502/ps04/Shakespeare.txt' as (line:chararray);
 words = foreach shakespeare generate flatten(TOKENIZE(LOWER(line))) as word;
 grouped = GROUP words by word;
 wordcount = FOREACH grouped GENERATE group, COUNT(words);
