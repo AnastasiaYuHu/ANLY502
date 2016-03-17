@@ -15,7 +15,7 @@ DEFINE EXTRACT       org.apache.pig.piggybank.evaluation.string.EXTRACT();
 -- Uncomment the data source you wish to use:
 
 -- This URL uses just one day
-aw_logs = load 's3://gu-anly502/ps03/forensicswiki.2012-01.unzipped/access.log.2012-01-01' as (line:chararray);
+raw_logs = load 's3://gu-anly502/ps03/forensicswiki.2012-01.unzipped/access.log.2012-01-01' as (line:chararray);
 --
 -- This URL uses another day:
 -- raw_logs = load 's3://gu-anly502/ps03/forensicswiki/access.log.2012-12-31.gz' as (line:chararray);
@@ -40,6 +40,10 @@ logs_base =
      host: chararray, identity: chararray, user: chararray, datetime_str: chararray, verb: chararray, url: chararray, request: chararray, status: int,
      size: int, referrer: chararray, agent: chararray
      );
+logs  = FOREACH logs_base GENERATE ToDate(SUBSTRING(datetime_str,0,11),'dd/MMM/yyyy') AS date, host, url, size;
+logs2 = FOREACH logs      GENERATE SUBSTRING(ToString(date),0,10) AS date, host, url, size;
+
+by_date = GROUP logs2 BY (date);
 
 -- YOUR CODE GOES HERE
 -- YOUR CODE SHOULD PUT THE RESULTS IN date_counts_sorted
