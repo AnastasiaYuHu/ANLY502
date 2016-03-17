@@ -44,9 +44,10 @@ logs  = FOREACH logs_base GENERATE ToDate(SUBSTRING(datetime_str,0,11),'dd/MMM/y
 logs2 = FOREACH logs      GENERATE SUBSTRING(ToString(date),0,10) AS date, host, url, size;
 
 by_date = GROUP logs2 BY (date);
-
--- YOUR CODE GOES HERE
--- YOUR CODE SHOULD PUT THE RESULTS IN date_counts_sorted
+date_counts = FOREACH by_date GENERATE
+    group as date,
+    COUNT(logs_base);
+dump date_counts;
 
 store date_counts_sorted INTO 'count_by_date' USING PigStorage();
 
