@@ -34,9 +34,17 @@ logs_base =
      host: chararray, identity: chararray, user: chararray, datetime_str: chararray, verb: chararray, url: chararray, request: chararray, status: int,
      size: int, referrer: chararray, agent: chararray
      );
+logs2 = FOREACH logs      GENERATE SUBSTRING(ToString(date),0,10) AS date, host, url, size;
+logs3 = FOREACH logs2     GENERATE REGEX_EXTRACT_ALL(date, '(2012.*)') AS date, host, url, size;
+logs4 = FOREACH logs3     GENERATE REGEX_EXTRACT_ALL(url, '(index.php\\?title=|/wiki/)([^ &]*)') AS date, host, url, size
 
--- YOUR CODE GOES HERE
--- PUT YOUR RESULTS IN output
+      by_wiki = GROUP logs4 BY (url);
+      wiki_counts = FOREACH by_wiki GENERATE
+          group AS url,    
+          COUNT(logs4);      
+      wiki_counts_sorted = ORDER wiki_counts BY $1 DESC;
+      wiki_counts_sorted20 = limit wiki_counts_sorted 20;
+      dump wiki_counts_sorted20;
 
 store output INTO 'forensicswiki_page_top20' USING PigStorage();
 
