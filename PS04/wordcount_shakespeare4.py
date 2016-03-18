@@ -31,7 +31,14 @@ if __name__ == "__main__":
 
     sc     = SparkContext( appName="Shakespeare Count" )
     lines  = sc.textFile( infile )
-
+    counts = lines.flatMap(lambda line: line.lower().split(' ')) \
+                  .map(lambda word: filter(unicode.isalpha,word)) \
+                  .map(lambda x: (x, 1)) \
+                  .reduceByKey(add)
+    top40counts = counts.sortBy(lambda x: x[1], ascending=False) \
+                  .take(40)
+    for (word, count) in top40counts:
+        print "%-10s: %i" % (word, count)
     ## YOUR CODE GOES HERE
     ## PUT YOUR RESULTS IN top40counts
 
