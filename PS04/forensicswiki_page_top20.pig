@@ -34,7 +34,7 @@ logs_base =
      host: chararray, identity: chararray, user: chararray, datetime_str: chararray, verb: chararray, url: chararray, request: chararray, status: int,
      size: int, referrer: chararray, agent: chararray
      );
-logs2 = FOREACH logs      GENERATE SUBSTRING(ToString(date),0,10) AS date, host, url, size;
+logs2 = FOREACH logs_base      GENERATE SUBSTRING(ToString(datetime_str),0,10) AS date, host, url, size;
 logs3 = FOREACH logs2     GENERATE REGEX_EXTRACT_ALL(date, '(2012.*)') AS date, host, url, size;
 logs4 = FOREACH logs3     GENERATE REGEX_EXTRACT_ALL(url, '(index.php\\?title=|/wiki/)([^ &]*)') AS date, host, url, size
 
