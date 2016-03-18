@@ -27,7 +27,9 @@ if __name__ == "__main__":
     ##
 
     sc     = SparkContext( appName="Wikipedia Count" )
-
+    lines = sc.textFile(infile)
+    counts = lines.map()
+    
     ## YOUR CODE GOES HERE
     ## PUT YOUR RESULTS IN counts
 
