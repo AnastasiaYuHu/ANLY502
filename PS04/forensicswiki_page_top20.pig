@@ -24,17 +24,17 @@ raw_logs = load 's3://gu-anly502/ps03/forensicswiki.2012.txt' as (line:chararray
 -- logs_base processes each of the lines 
 -- FLATTEN takes the extracted values and flattens them into a single tupple
 --
-logs_base = 
+logs = 
   FOREACH
    raw_logs
   GENERATE
    FLATTEN ( EXTRACT( line,
      '^(\\S+) (\\S+) (\\S+) \\[([^\\]]+)\\] "(\\S+) (\\S+) \\S+" (\\S+) (\\S+) "([^"]*)" "([^"]*)"'
      ) ) AS (
-     host: chararray, identity: chararray, user: chararray, datetime_str: chararray, verb: chararray, url: chararray, request: chararray, status: int,
+     host: chararray, identity: chararray, user: chararray, datetime: chararray, verb: chararray, url: chararray, request: chararray, status: int,
      size: int, referrer: chararray, agent: chararray
      );
-logs2 = FOREACH logs_base      GENERATE SUBSTRING(ToString(datetime_str),0,10) AS date, host, url, size;
+logs2 = FOREACH logs      GENERATE SUBSTRING(ToString(datetime),0,10) AS date, host, url, size;
 logs3 = FOREACH logs2     GENERATE REGEX_EXTRACT_ALL(date, '(2012.*)') AS date, host, url, size;
 logs4 = FOREACH logs3     GENERATE REGEX_EXTRACT_ALL(url, '(index.php\\?title=|/wiki/)([^ &]*)') AS date, host, url, size
 
