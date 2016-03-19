@@ -23,9 +23,7 @@ if __name__ == "__main__":
     join1 = lines1.map(lambda x: (x[1], x.split(',')[0]).split('/')[0])
     join2 = lines2.map(lambda x: (x[0], x[-1]))
     joined = join1.join(join2)
-    ## 
-    ## Run WordCount on Spark
-    ##
+    ip_country = joined.map(lambda x : x[1])
+    ip_country.collect()
+    
 
-
-    lines = sc.textFile(infile)
