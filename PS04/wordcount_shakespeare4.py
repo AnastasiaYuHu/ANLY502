@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
     sc     = SparkContext( appName="Shakespeare Count" )
     lines  = sc.textFile( infile )
-    counts = lines.flatMap(lambda line: line.lower().split(' ')) \
+    counts = lines.flatMap(lambda line: line.lower().split()) \
                   .map(lambda word: filter(unicode.isalpha,word)) \
                   .map(lambda x: (x, 1)) \
                   .reduceByKey(add)
@@ -44,7 +44,8 @@ if __name__ == "__main__":
 
     with open("wordcount_shakespeare4.txt","w") as fout:
         for (word, count) in top40counts:
-            fout.write("{}\t{}\n".format(word,count))
+            
+         fout.write("{}\t{}\n".format(word,count))
     
     ## 
     ## Terminate the Spark job

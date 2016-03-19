@@ -15,7 +15,7 @@ DEFINE EXTRACT       org.apache.pig.piggybank.evaluation.string.EXTRACT();
 -- Uncomment the data source you wish to use:
 
 -- This URL uses just one day
-raw_logs = load 's3://gu-anly502/ps03/forensicswiki.2012-01.unzipped/access.log.2012-01-01' as (line:chararray);
+-- raw_logs = load 's3://gu-anly502/ps03/forensicswiki.2012-01.unzipped/access.log.2012-01-01' as (line:chararray);
 --
 -- This URL uses another day:
 -- raw_logs = load 's3://gu-anly502/ps03/forensicswiki/access.log.2012-12-31.gz' as (line:chararray);
@@ -24,7 +24,7 @@ raw_logs = load 's3://gu-anly502/ps03/forensicswiki.2012-01.unzipped/access.log.
 -- raw_logs = load 's3://gu-anly502/ps03/forensicswiki.2012-01.unzipped/access.log.2012-01-??' as (line:chararray);
 --
 -- This URL reads all of 2012:
--- raw_logs = load 's3://gu-anly502/ps03/forensicswiki.2012.txt' as (line:chararray);
+raw_logs = load 's3://gu-anly502/ps03/forensicswiki.2012.txt' as (line:chararray);
 
  
 -- logs_base processes each of the lines 
@@ -46,7 +46,9 @@ logs2 = FOREACH logs      GENERATE SUBSTRING(ToString(date),0,10) AS date, host,
 by_date = GROUP logs2 BY (date);
 date_counts = FOREACH by_date GENERATE
     group as date,
-    COUNT(logs_base);
+    COUNT(logs2);
+
+date_counts_sorted = ORDER date_counts BY date;
 dump date_counts;
 
 store date_counts_sorted INTO 'count_by_date' USING PigStorage();

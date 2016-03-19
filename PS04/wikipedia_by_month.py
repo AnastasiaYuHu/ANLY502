@@ -13,6 +13,10 @@
 import sys
 from operator import add
 from pyspark import SparkContext
+import matplotlib as plt
+from numpy import *
+import numpy as np
+from matplotlib import pyplot as plt
 
 if __name__ == "__main__":
     
@@ -27,17 +31,29 @@ if __name__ == "__main__":
     ##
 
     sc     = SparkContext( appName="Wikipedia Count" )
+    lines = sc.textFile(infile)
+    
+    counts = lines.map(lambda line:line.split('\t')[2]).map(lambda x:(x[0:7],1)).reduceByKey(add)
+    counts_by_month = counts.sortBy(lambda x: x[0])
 
+    length = counts_by_month.count()
+    x = range(0, length)
+    lables = counts_by_month.map(lambda x : x[0]).collect()
+    y = counts_by_month.map(lambda x : x[1]).collect()
+    plt.plot(np.array(x),np.array(y))
+    plt.xticks(x,lables,rotation = 'vertical')
+    plt.savefig("counts_by_month.pdf")
+
+    counts_by_month.collect()
     ## YOUR CODE GOES HERE
     ## PUT YOUR RESULTS IN counts
 
 
-    with open("wikipedia_by_month.txt","w") as fout:
-        for (date, count) in counts():
-            fout.write("{}\t{}\n".format(date,count))
-    
+    """with open("wikipedia_by_month.txt","w") as fout:
+        for (date, count) in counts_by_month:
+            fout.write("{}\t{}\n".format(date,count))"""    
+
     ## 
     ## Terminate the Spark job
     ##
-
     sc.stop()
