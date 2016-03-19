@@ -32,6 +32,7 @@ if __name__ == "__main__":
 
     sc     = SparkContext( appName="Wikipedia Count" )
     lines = sc.textFile(infile)
+<<<<<<< HEAD
     
     counts = lines.map(lambda line:line.split('\t')[2]).map(lambda x:(x[0:7],1)).reduceByKey(add)
     counts_by_month = counts.sortBy(lambda x: x[0])
@@ -45,6 +46,10 @@ if __name__ == "__main__":
     plt.savefig("counts_by_month.pdf")
 
     counts_by_month.collect()
+=======
+    counts = lines.map()
+    
+>>>>>>> 65a15a888eef7c1f146383d61b9f57882504af41
     ## YOUR CODE GOES HERE
     ## PUT YOUR RESULTS IN counts
 
