@@ -20,8 +20,8 @@ if __name__ == "__main__":
     inlines1 = lines1.zipWithIndex().filter(lambda x : x[1]>0).map(lambda x : x[0])
     inlines2 = lines2.zipWithIndex().filter(lambda x : x[1]>0).map(lambda x : x[0])
     
-    join1 = lines1.flatMap(lambda x: (x.split(',')[1], x.split(',')[0]).split('/')[0])
-    join2 = lines2.flatMap(lambda x: (x.split(',')[0], x.split(',')[-1]))
+    join1 = lines1.map(lambda x: (x[1], x.split(',')[0]).split('/')[0])
+    join2 = lines2.map(lambda x: (x[0], x[-1]))
     joined = join1.join(join2)
     ## 
     ## Run WordCount on Spark
