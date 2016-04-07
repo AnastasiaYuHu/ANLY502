@@ -64,5 +64,5 @@ insert overwrite table bot_stats
   from bot_logs
   group by substr(date,1,7);
   
-select yearmonth,botcount,nonbotcount from bot_stats order by yearmonth;
+select yearmonth,botcount,nonbotcount from bot_stats where isnotnull(yearmonth) order by yearmonth;
 
