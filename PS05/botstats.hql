@@ -40,6 +40,8 @@ insert overwrite table bot_logs
          instr(lower(agent),"bot")>0
   from raw_logs;
 
+--select * from bot_logs where bot limit 3;
+--select * from bot_logs where not bot limit 3;
 
 create temporary table bot_stats (
   yearmonth string,
@@ -51,9 +53,16 @@ create temporary table bot_stats (
   nonbotsize bigint
 );
 
-insert overwrite table bot_stats (
-  select substr()
-);
-
+insert overwrite table bot_stats
+  select substr(date,1,10),
+         count(*),
+         sum(IF(bot,1,0) 
+         sum(IF,bot,0,1)
+         sum(size),
+         sum(IF(bot,size,0)),
+         sum(IF(bot,0,size))
+  from bot_logs
+  group by substr(date,1,10);
+  
 select yearmonth,botcount,nonbotcount from bot_stats order by yearmonth;
 
