@@ -54,15 +54,15 @@ create temporary table bot_stats (
 );
 
 insert overwrite table bot_stats
-  select substr(date,1,10),
+  select substr(date,1,7),
          count(*),
-         sum(IF(bot,1,0) 
-         sum(IF,bot,0,1)
+         sum(IF(bot,1,0)),
+         sum(IF(bot,0,1)),
          sum(size),
          sum(IF(bot,size,0)),
          sum(IF(bot,0,size))
   from bot_logs
-  group by substr(date,1,10);
+  group by substr(date,1,7);
   
 select yearmonth,botcount,nonbotcount from bot_stats order by yearmonth;
 
