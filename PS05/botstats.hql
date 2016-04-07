@@ -51,8 +51,9 @@ create temporary table bot_stats (
   nonbotsize bigint
 );
 
-insert overwrite table bot_stats
-YOUR CODE GOES HERE
+insert overwrite table bot_stats (
+  select substr()
+);
 
 select yearmonth,botcount,nonbotcount from bot_stats order by yearmonth;
 
